@@ -68,7 +68,6 @@ class Book(models.Model):
         """
         Creates a string for the Language. This is required to display Language in Admin.
         """
-        # return ', '.join([ Language.name for language in self.language[:3] ])
         return self.language
 
     display_genre.short_description = 'Genre'
