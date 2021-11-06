@@ -15,6 +15,18 @@ class Genre(models.Model):
         """
         return self.name
 
+class Language(models.Model):
+    """Model representing a Language (e.g. English, French, Japanese, etc.)"""
+    name = models.CharField(max_length=200,
+                            help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
+
+    def __str__(self):
+        """
+        String for representing the Model object (in Admin site etc.)
+        """
+        return self.name
+
+
 
 from django.urls import reverse #Used to generate URLs by reversing the URL patterns
 
@@ -52,7 +64,15 @@ class Book(models.Model):
         """
         return ', '.join([ genre.name for genre in self.genre.all()[:3] ])
 
+    def display_language(self):
+        """
+        Creates a string for the Language. This is required to display Language in Admin.
+        """
+        # return ', '.join([ Language.name for language in self.language[:3] ])
+        return self.language
+
     display_genre.short_description = 'Genre'
+    display_language.short_description = 'Language'
 
 
 import uuid # Required for unique book instances
@@ -107,7 +127,3 @@ class Author(models.Model):
         """
         return '%s, %s' % (self.last_name, self.first_name)
 
-class Language(models.Model):
-    """Model representing a Language (e.g. English, French, Japanese, etc.)"""
-    name = models.CharField(max_length=200,
-                            help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
