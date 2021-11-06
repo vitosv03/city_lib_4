@@ -18,7 +18,7 @@ def index(request):
 
     # выполнение задания 2 из блока 5
     num_genres = Genre.objects.all().count()
-
+    num_books_with_titles = Book.objects.filter(title__icontains='').count
 
     # Отрисовка HTML-шаблона index.html с данными внутри
     # переменной контекста context
@@ -29,6 +29,7 @@ def index(request):
                  'num_instances': num_instances,
                  'num_instances_available': num_instances_available,
                  'num_authors': num_authors,
-                 'num_genres': num_genres
+                 'num_genres': num_genres,
+                 'num_books_with_titles': num_books_with_titles
                  },
     )
