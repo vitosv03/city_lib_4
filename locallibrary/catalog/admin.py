@@ -22,9 +22,14 @@ class AuthorAdmin(admin.ModelAdmin):
 
 # Register the Admin classes for Book using the decorator
 
+class BooksInstanceInline(admin.TabularInline):
+    model = BookInstance
+
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'display_genre', 'display_language')
+    inlines = [BooksInstanceInline]
+    extra = 0
 
 
 # Register the Admin classes for BookInstance using the decorator
@@ -41,3 +46,5 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('status', 'due_back')
         }),
     )
+
+
