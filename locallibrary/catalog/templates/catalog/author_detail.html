@@ -9,7 +9,7 @@
 
 
   <div style="margin-left:20px;margin-top:20px">
-    <h4>Books</h4>
+    <h3>Books</h3>
     {% for books in author.book_set.all %}
     <hr>
     <strong><p><a href="{{ books.get_absolute_url }}">{{ books.title }}</a> ({{ books.id }})</strong></p>
