@@ -53,21 +53,15 @@ class Book(models.Model):
 
 
     def get_absolute_url(self):
-        """
-        Returns the url to access a particular book instance.
-        """
+        """        Returns the url to access a particular book instance.        """
         return reverse('book-detail', args=[str(self.id)])
 
     def display_genre(self):
-        """
-        Creates a string for the Genre. This is required to display genre in Admin.
-        """
+        """        Creates a string for the Genre. This is required to display genre in Admin.        """
         return ', '.join([ genre.name for genre in self.genre.all()[:3] ])
 
     def display_language(self):
-        """
-        Creates a string for the Language. This is required to display Language in Admin.
-        """
+        """        Creates a string for the Language. This is required to display Language in Admin.        """
         return self.language
 
     display_genre.short_description = 'Genre'
