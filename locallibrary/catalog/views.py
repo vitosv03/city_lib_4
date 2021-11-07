@@ -34,7 +34,13 @@ def index(request):
                  },
     )
 
+
 from django.views import generic
 
+
 class BookListView(generic.ListView):
+    model = Book
+
+
+class BookDetailView(generic.DetailView):
     model = Book
