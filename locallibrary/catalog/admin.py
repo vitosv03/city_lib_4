@@ -53,13 +53,13 @@ class BookInstanceAdmin(admin.ModelAdmin):
     # Для представления списка BookInstance , добавьте код
     # для отображения книги, статуса, даты возврата, и id
     # (вместо значения по умолчанию возвращаемого  __str__() ).
-    list_display = ('book', 'status', 'due_back', 'id')
+    list_display = ('book', 'status', 'borrower', 'due_back', 'id')
 
     fieldsets = (
         (None, {
             'fields': ('book', 'imprint', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_back')
+            'fields': ('status', 'due_back', 'borrower')
         }),
     )
