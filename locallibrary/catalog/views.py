@@ -74,7 +74,6 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
             order_by('due_back')
 
 
-
 class LoanedBooksByAllListView(LoginRequiredMixin, generic.ListView):
     """    для СТАФФ список всек книг по задолжностям    """
     model = BookInstance
