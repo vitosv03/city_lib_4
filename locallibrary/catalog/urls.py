@@ -1,14 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
-
 # urlpatterns = [
-#
+#     path('', views.index, name='index'),
 # ]
-
-urlpatterns = [
-    path('', views.index, name='index'),
-]
 
 from django.urls import path
 from . import views
@@ -22,4 +17,9 @@ urlpatterns = [
     url(r'^author/(?P<pk>\d+)$', views.AuthorDetailView.as_view(), name='author-detail'),
 ]
 
+#Add Django site authentication urls
+# (for login, logout, password management)
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
+]
 
