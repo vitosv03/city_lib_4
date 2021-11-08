@@ -17,9 +17,4 @@ urlpatterns = [
     url(r'^author/(?P<pk>\d+)$', views.AuthorDetailView.as_view(), name='author-detail'),
 ]
 
-#Add Django site authentication urls
-# (for login, logout, password management)
-urlpatterns += [
-    path('accounts/', include('django.contrib.auth.urls')),
-]
 
