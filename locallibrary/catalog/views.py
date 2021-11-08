@@ -72,3 +72,18 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
             filter(borrower=self.request.user). \
             filter(status__exact='o'). \
             order_by('due_back')
+
+
+
+class LoanedBooksByAllListView(LoginRequiredMixin, generic.ListView):
+    """    для СТАФФ список всек книг по задолжностям    """
+    model = BookInstance
+    template_name = 'catalog/bookinstance_list_borrowed_all.html'
+    paginate_by = 5
+
+    # слэш "\" значит перенос строки, чтоб нагляднее было, а то строка длинная
+    def get_queryset(self):
+        return BookInstance.objects. \
+            filter(status__exact='o'). \
+            order_by('due_back')
+
