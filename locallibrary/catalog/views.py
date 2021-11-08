@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from .models import Book, Author, BookInstance, Genre, Language
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # Create your views here.
-
-from .models import Book, Author, BookInstance, Genre, Language
-
 
 def index(request):
     """
@@ -22,13 +23,11 @@ def index(request):
 
     # Number of visits to this view,
     # as counted in the session variable.
-    num_visits=request.session.get('num_visits', 0)
+    num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
-
 
     # Отрисовка HTML-шаблона index.html с данными внутри
     # переменной контекста context
-    #
     # Затем переменная num_visits передаётся в шаблон
     # через переменную контекста context.
     return render(
@@ -40,12 +39,9 @@ def index(request):
                  'num_authors': num_authors,
                  'num_genres': num_genres,
                  'num_books_with_titles': num_books_with_titles,
-                 'num_visits':num_visits    # num_visits appended
+                 'num_visits': num_visits  # num_visits appended
                  },
     )
-
-
-from django.views import generic
 
 
 class BookListView(generic.ListView):
@@ -64,3 +60,17 @@ class AuthorListView(generic.ListView):
 
 class AuthorDetailView(generic.DetailView):
     model = Author
+
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    """    Generic class-based view listing books on loan to current user.    """
+    model = BookInstance
+    template_name = 'catalog/bookinstance_list_borrowed_user.html'
+    paginate_by = 2
+
+    # слэш "\" значит перенос строки, чтоб нагляднее было, а то строка длинная
+    def get_queryset(self):
+        return BookInstance.objects. \
+            filter(borrower=self.request.user). \
+            filter(status__exact='o'). \
+            order_by('due_back')
