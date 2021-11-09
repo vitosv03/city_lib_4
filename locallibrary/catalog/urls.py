@@ -24,3 +24,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^allbooks/$', views.LoanedBooksByAllListView.as_view(), name='all-borrowed'),
 ]
+
+urlpatterns += [
+    url(r'^book/(?P<pk>[-\w]+)/renew/$', views.renew_book_librarian, name='renew-book-librarian'),
+]
