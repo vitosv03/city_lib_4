@@ -120,6 +120,7 @@ def renew_book_librarian(request, pk):
     # Если это GET (или любой другой метод), создайте форму по умолчанию.
     else:
         proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        # значение поле дата по умолчанию = proposed_renewal_date
         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date,})
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst':book_inst})
