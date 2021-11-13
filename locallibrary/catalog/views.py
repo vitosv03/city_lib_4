@@ -7,9 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 def index(request):
-    """
-    Функция отображения для домашней страницы сайта.
-    """
+    """    Функция отображения для домашней страницы сайта.    """
     # Генерация "количеств" некоторых главных объектов
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
@@ -46,7 +44,7 @@ def index(request):
 
 class BookListView(generic.ListView):
     model = Book
-    paginate_by = 2
+    paginate_by = 10
 
 
 class BookDetailView(generic.DetailView):
@@ -55,7 +53,7 @@ class BookDetailView(generic.DetailView):
 
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 2
+    paginate_by = 10
 
 
 class AuthorDetailView(generic.DetailView):
@@ -66,7 +64,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     """    Generic class-based view listing books on loan to current user.    """
     model = BookInstance
     template_name = 'catalog/bookinstance_list_borrowed_user.html'
-    paginate_by = 2
+    paginate_by = 10
 
     # слэш "\" значит перенос строки, чтоб нагляднее было, а то строка длинная
     def get_queryset(self):
@@ -80,7 +78,7 @@ class LoanedBooksByAllListView(LoginRequiredMixin, generic.ListView):
     """    для СТАФФ список всек книг по задолжностям    """
     model = BookInstance
     template_name = 'catalog/bookinstance_list_borrowed_all.html'
-    paginate_by = 5
+    paginate_by = 10
 
     # слэш "\" значит перенос строки, чтоб нагляднее было, а то строка длинная
     def get_queryset(self):
