@@ -88,7 +88,6 @@ class LoanedBooksByAllListView(LoginRequiredMixin, generic.ListView):
             filter(status__exact='o'). \
             order_by('due_back')
 
-
 from django.contrib.auth.decorators import permission_required
 
 from django.shortcuts import get_object_or_404
@@ -127,7 +126,6 @@ def renew_book_librarian(request, pk):
         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date, })
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst': book_inst})
-
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
