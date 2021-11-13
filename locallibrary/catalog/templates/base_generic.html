@@ -42,6 +42,8 @@
           <li>Staff</li>
           {% if perms.catalog.can_mark_returned %}
               <li><a href="{% url 'all-borrowed' %}">All borrowed</a></li>
+              <br>
+              <li><a href="{% url 'author_create' %}">Add new Author</a></li>
           {% endif %}
           </ul>
       {% endif %}
