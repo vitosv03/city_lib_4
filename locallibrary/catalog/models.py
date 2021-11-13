@@ -7,15 +7,11 @@ import uuid  # Required for unique book instances
 # Create your models here.
 
 class Genre(models.Model):
-    """
-    Model representing a book genre (e.g. Science Fiction, Non Fiction).
-    """
+    """    Model representing a book genre (e.g. Science Fiction, Non Fiction).    """
     name = models.CharField(max_length=200, help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)")
 
     def __str__(self):
-        """
-        String for representing the Model object (in Admin site etc.)
-        """
+        """        String for representing the Model object (in Admin site etc.)        """
         return self.name
 
 
@@ -25,16 +21,12 @@ class Language(models.Model):
                             help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
 
     def __str__(self):
-        """
-        String for representing the Model object (in Admin site etc.)
-        """
+        """        String for representing the Model object (in Admin site etc.)        """
         return self.name
 
 
 class Book(models.Model):
-    """
-    Model representing a book (but not a specific copy of a book).
-    """
+    """    Model representing a book (but not a specific copy of a book).    """
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
     # Foreign Key used because book can only have one author, but authors can have multiple books
@@ -48,9 +40,7 @@ class Book(models.Model):
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        """
-        String for representing the Model object.
-        """
+        """        String for representing the Model object.        """
         return self.title
 
     def get_absolute_url(self):

@@ -135,16 +135,44 @@ from .models import Author
 
 
 class AuthorCreate(CreateView):
+    # использует суффикс '_form'
     model = Author
     fields = '__all__'
+    # значение поля по умолчанию
     initial = {'date_of_death': '12/10/2016', }
 
 
 class AuthorUpdate(UpdateView):
+    # использует суффикс '_form'
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
 
 
 class AuthorDelete(DeleteView):
     model = Author
+    # после удаления перейти на страницу просмотра всех книг
+    # author_confirm_delete.html, где "_confirm_delete" это суффикс
+    # его надо использовать или изменить, так как мы наследуем класс DeleteView
+    # а этот класс ищет файлы по суффиксу
     success_url = reverse_lazy('authors')
+
+
+class BookCreate(CreateView):
+    # использует суффикс '_form'
+    model = Book
+    fields = '__all__'
+
+
+class BookUpdate(UpdateView):
+    # использует суффикс '_form'
+    model = Book
+    fields = ['title', 'summary', 'isbn', 'genre', 'language']
+
+
+class BookDelete(DeleteView):
+    model = Book
+    # после удаления перейти на страницу просмотра всех книг
+    # book_confirm_delete.html, где "_confirm_delete" это суффикс
+    # его надо использовать или изменить, так как мы наследуем класс DeleteView
+    # а этот класс ищет файлы по суффиксу
+    success_url = reverse_lazy('books')

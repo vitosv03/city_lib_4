@@ -8,6 +8,9 @@ from . import views
 from django.urls import path
 from . import views
 from django.conf.urls import url
+# при переходе по ссылке (зеленой ссылке) -- использовать функцию(или класс)
+# для обработки (отрисовки) и вывода на экран пользователю
+# страницы которая указа в параметре name
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
