@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre, Language
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 # Create your views here.
@@ -86,7 +86,8 @@ class LoanedBooksByAllListView(LoginRequiredMixin, generic.ListView):
             filter(status__exact='o'). \
             order_by('due_back')
 
-from django.contrib.auth.decorators import permission_required
+
+from django.contrib.auth.decorators import permission_required, login_required
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
@@ -95,7 +96,7 @@ import datetime
 
 from .forms import RenewBookForm
 
-
+@login_required
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):
     """    Функция просмотра для обновления определенного экземпляра BookInstance библиотекарем  """
@@ -125,50 +126,62 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst': book_inst})
 
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Author
 
 
-class AuthorCreate(CreateView):
+class AuthorCreate(PermissionRequiredMixin, CreateView):
+    # Отображения  "создать" и "обновить" используют  шаблоны
+    # с именем model_name_form.html,
     # использует суффикс '_form'
     model = Author
     fields = '__all__'
     # значение поля по умолчанию
     initial = {'date_of_death': '12/10/2016', }
+    permission_required = 'catalog.can_mark_returned'
 
 
-class AuthorUpdate(UpdateView):
+class AuthorUpdate(PermissionRequiredMixin, UpdateView):
+    # Отображения  "создать" и "обновить" используют  шаблоны
+    # с именем model_name_form.html,
     # использует суффикс '_form'
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
+    permission_required = 'catalog.can_mark_returned'
 
 
-class AuthorDelete(DeleteView):
+class AuthorDelete(PermissionRequiredMixin, DeleteView):
     model = Author
     # после удаления перейти на страницу просмотра всех книг
     # author_confirm_delete.html, где "_confirm_delete" это суффикс
     # его надо использовать или изменить, так как мы наследуем класс DeleteView
     # а этот класс ищет файлы по суффиксу
     success_url = reverse_lazy('authors')
+    permission_required = 'catalog.can_mark_returned'
 
 
-class BookCreate(CreateView):
+class BookCreate(PermissionRequiredMixin, CreateView):
     # использует суффикс '_form'
     model = Book
-    fields = '__all__'
+    # fields = '__all__'
+    fields = ['author', 'title', 'summary', 'isbn', 'genre', 'language']
+    permission_required = 'catalog.can_mark_returned'
 
 
-class BookUpdate(UpdateView):
+class BookUpdate(PermissionRequiredMixin, UpdateView):
     # использует суффикс '_form'
     model = Book
     fields = ['title', 'summary', 'isbn', 'genre', 'language']
+    permission_required = 'catalog.can_mark_returned'
 
 
-class BookDelete(DeleteView):
+class BookDelete(PermissionRequiredMixin, DeleteView):
     model = Book
     # после удаления перейти на страницу просмотра всех книг
     # book_confirm_delete.html, где "_confirm_delete" это суффикс
     # его надо использовать или изменить, так как мы наследуем класс DeleteView
     # а этот класс ищет файлы по суффиксу
     success_url = reverse_lazy('books')
+    permission_required = 'catalog.can_mark_returned'

@@ -1,10 +1,13 @@
 from django.test import TestCase
-
-# Create your tests here.
-
 from catalog.models import Author
 from django.urls import reverse
+import datetime
+from django.utils import timezone
 
+from catalog.models import BookInstance, Book, Genre, Language
+from django.contrib.auth.models import User  # Необходимо для представления User как borrower
+
+from django.contrib.auth.models import Permission  # Required to grant the permission needed to set a book as returned.
 
 class AuthorListViewTest(TestCase):
 
@@ -26,7 +29,6 @@ class AuthorListViewTest(TestCase):
     def test_view_uses_correct_template(self):
         resp = self.client.get(reverse('authors'))
         self.assertEqual(resp.status_code, 200)
-
         self.assertTemplateUsed(resp, 'catalog/author_list.html')
 
     def test_pagination_is_ten(self):
@@ -43,13 +45,6 @@ class AuthorListViewTest(TestCase):
         self.assertTrue('is_paginated' in resp.context)
         self.assertTrue(resp.context['is_paginated'] == True)
         self.assertTrue(len(resp.context['author_list']) == 3)
-
-
-import datetime
-from django.utils import timezone
-
-from catalog.models import BookInstance, Book, Genre, Language
-from django.contrib.auth.models import User  # Необходимо для представления User как borrower
 
 
 class LoanedBookInstancesByUserListViewTest(TestCase):
@@ -158,9 +153,6 @@ class LoanedBookInstancesByUserListViewTest(TestCase):
                 last_date = copy.due_back
             else:
                 self.assertTrue(last_date <= copy.due_back)
-
-
-from django.contrib.auth.models import Permission  # Required to grant the permission needed to set a book as returned.
 
 
 class RenewBookInstancesViewTest(TestCase):
