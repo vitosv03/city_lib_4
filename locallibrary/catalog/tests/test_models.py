@@ -2,7 +2,9 @@ from django.test import TestCase
 
 # Create your tests here.
 
-from locallibrary.catalog.models import Author
+from catalog.models import Author
+#  locallibrary.catalog.models
+# хоть система и ругается но нельзя писать полный путь
 
 class AuthorModelTest(TestCase):
 
@@ -26,7 +28,7 @@ class AuthorModelTest(TestCase):
     def test_date_of_birth_label(self):
         author=Author.objects.get(id=1)
         field_label = author._meta.get_field('date_of_birth').verbose_name
-        self.assertEquals(field_label,'date_of_birth')
+        self.assertEquals(field_label,'date of birth')
 
     def test_date_of_death_label(self):
         author=Author.objects.get(id=1)
