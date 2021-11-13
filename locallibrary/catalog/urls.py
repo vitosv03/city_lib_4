@@ -10,7 +10,9 @@ from . import views
 from django.conf.urls import url
 # при переходе по ссылке (зеленой ссылке) -- использовать функцию(или класс)
 # для обработки (отрисовки) и вывода на экран пользователю
-# страницы которая указа в параметре name
+# короткая ссылка которая указа в параметре name
+# нужна для вызова страницы напрямую из html шаблона
+# например <a href="{% url 'renew-book-librarian' bookinst.id %}">
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
