@@ -9,6 +9,7 @@ from django.contrib.auth.models import User  # Необходимо для пр�
 
 from django.contrib.auth.models import Permission  # Required to grant the permission needed to set a book as returned.
 
+
 class AuthorListViewTest(TestCase):
 
     @classmethod
@@ -251,28 +252,123 @@ class RenewBookInstancesViewTest(TestCase):
 
     def test_form_renewal_date_initially_has_date_three_weeks_in_future(self):
         login = self.client.login(username='testuser2', password='12345')
-        resp = self.client.get(reverse('renew-book-librarian', kwargs={'pk':self.test_bookinstance1.pk,}) )
-        self.assertEqual( resp.status_code,200)
+        resp = self.client.get(reverse('renew-book-librarian', kwargs={'pk': self.test_bookinstance1.pk, }))
+        self.assertEqual(resp.status_code, 200)
 
         date_3_weeks_in_future = datetime.date.today() + datetime.timedelta(weeks=3)
-        self.assertEqual(resp.context['form'].initial['renewal_date'], date_3_weeks_in_future )
+        self.assertEqual(resp.context['form'].initial['renewal_date'], date_3_weeks_in_future)
 
     def test_redirects_to_all_borrowed_book_list_on_success(self):
         login = self.client.login(username='testuser2', password='12345')
         valid_date_in_future = datetime.date.today() + datetime.timedelta(weeks=2)
-        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk':self.test_bookinstance1.pk,}), {'renewal_date':valid_date_in_future} )
-        self.assertRedirects(resp, reverse('all-borrowed') )
+        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk': self.test_bookinstance1.pk, }),
+                                {'renewal_date': valid_date_in_future})
+        self.assertRedirects(resp, reverse('all-borrowed'))
 
     def test_form_invalid_renewal_date_past(self):
         login = self.client.login(username='testuser2', password='12345')
         date_in_past = datetime.date.today() - datetime.timedelta(weeks=1)
-        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk':self.test_bookinstance1.pk,}), {'renewal_date':date_in_past} )
-        self.assertEqual( resp.status_code,200)
+        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk': self.test_bookinstance1.pk, }),
+                                {'renewal_date': date_in_past})
+        self.assertEqual(resp.status_code, 200)
         self.assertFormError(resp, 'form', 'renewal_date', 'Invalid date - renewal in past')
 
     def test_form_invalid_renewal_date_future(self):
         login = self.client.login(username='testuser2', password='12345')
         invalid_date_in_future = datetime.date.today() + datetime.timedelta(weeks=5)
-        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk':self.test_bookinstance1.pk,}), {'renewal_date':invalid_date_in_future} )
-        self.assertEqual( resp.status_code,200)
+        resp = self.client.post(reverse('renew-book-librarian', kwargs={'pk': self.test_bookinstance1.pk, }),
+                                {'renewal_date': invalid_date_in_future})
+        self.assertEqual(resp.status_code, 200)
         self.assertFormError(resp, 'form', 'renewal_date', 'Invalid date - renewal more than 4 weeks ahead')
+
+#
+# class AuthorCreateTest(TestCase):
+#
+#     def setUp(self):
+#         # Создание пользователя
+#         test_user1 = User.objects.create_user(username='testuser1', password='12345')
+#         test_user1.save()
+#
+#         test_user2 = User.objects.create_user(username='testuser2', password='12345')
+#         test_user2.save()
+#         permission = Permission.objects.get(name='Set book as returned')
+#         test_user2.user_permissions.add(permission)
+#         test_user2.save()
+#
+#         # Создание автора
+#         test_author = Author.objects.create(first_name='John', last_name='Smith', Date_of_birth='1970-01-01',
+#                                             Date_of_death='1999-01-01', )
+#         test_author.save()
+#
+#     def test_redirect_if_not_logged_in(self):
+#         resp = self.client.get(reverse('author_create'))
+#         self.assertRedirects(resp, '/accounts/login/?next=/catalog/author/create/')
+#
+#     def test_logged_in_uses_correct_template(self):
+#         login = self.client.login(username='testuser1', password='12345')
+#         resp = self.client.get(reverse('author_create'))
+#     #
+#     #     # Проверка что пользователь залогинился
+#     #     self.assertEqual(str(resp.context['user']), 'testuser1')
+#     #     # Проверка ответа на запрос
+#     #     self.assertEqual(resp.status_code, 200)
+#     #
+#     #     # Проверка того, что мы используем правильный шаблон
+#     #     self.assertTemplateUsed(resp, 'catalog/author_form.html')
+
+
+class AuthorCreateViewTest(TestCase):
+    """Test case for the AuthorCreate view (Created as Challenge)."""
+
+    def setUp(self):
+        # Create a user
+        test_user1 = User.objects.create_user(username='testuser1', password='1X<ISRUkw+tuK')
+        test_user2 = User.objects.create_user(username='testuser2', password='2HJ1vRV0Z&3iD')
+
+        test_user1.save()
+        test_user2.save()
+
+        permission = Permission.objects.get(name='Set book as returned')
+        test_user2.user_permissions.add(permission)
+        test_user2.save()
+
+        # Create a book
+        test_author = Author.objects.create(first_name='John', last_name='Smith')
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('author-create'))
+        self.assertRedirects(response, '/accounts/login/?next=/catalog/author/create/')
+
+    def test_forbidden_if_logged_in_but_not_correct_permission(self):
+        login = self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
+        response = self.client.get(reverse('author-create'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_logged_in_with_permission(self):
+        login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('author-create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('author-create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'catalog/author_form.html')
+
+    def test_form_date_of_death_initially_set_to_expected_date(self):
+        login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('author-create'))
+        self.assertEqual(response.status_code, 200)
+
+        expected_initial_date = datetime.date(2016, 10, 12)
+        response_date = response.context['form'].initial['date_of_death']
+        response_date = datetime.datetime.strptime(response_date, "%d/%m/%Y").date()
+        self.assertEqual(response_date, expected_initial_date)
+
+    def test_redirects_to_detail_view_on_success(self):
+        login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.post(reverse('author-create'),
+                                    {'first_name': 'Christian Name', 'last_name': 'Surname'})
+        # Manually check redirect because we don't know what author was created
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/catalog/author/'))
