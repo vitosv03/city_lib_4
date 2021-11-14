@@ -42,7 +42,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    url(r'^book/create/$', views.BookCreate.as_view(), name='book_create'),
-    url(r'^book/(?P<pk>\d+)/update/$', views.BookUpdate.as_view(), name='book_update'),
-    url(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book_delete'),
+    url(r'^book/create/$', views.BookCreate.as_view(), name='book-create'),
+    url(r'^book/(?P<pk>\d+)/update/$', views.BookUpdate.as_view(), name='book-update'),
+    url(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book-delete'),
 ]
